@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +23,11 @@ public class ProductRepository implements MongoRepository {
 
     public Object insert(Product product) {
         return mongoTemplate.save(product);
+    }
+
+    public Product findByTitle(String title) {
+        Query query = new Query(Criteria.where("title").is(title));
+        return mongoTemplate.findOne(query, Product.class);
     }
 
     @Override

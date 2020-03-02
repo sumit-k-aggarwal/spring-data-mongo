@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Optional;
+
 @RestController
 public class ProductController {
 
@@ -20,7 +22,14 @@ public class ProductController {
     public ResponseEntity addProduct(@RequestBody Product product, UriComponentsBuilder builder)  {
         repository.insert(product);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/addItem/{id}").buildAndExpand(product.getId()).toUri());
+        headers.setLocation(builder.path("/product/{id}").buildAndExpand(product.getId()).toUri());
         return new ResponseEntity<Product>(headers, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/product/{title}")
+    @ResponseBody
+    public ResponseEntity<Product> getProduct(@PathVariable String title) {
+        Product product = repository.findByTitle(title);
+        return new ResponseEntity<Product>(product, HttpStatus.OK);
     }
 }
